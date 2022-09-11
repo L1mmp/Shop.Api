@@ -7,6 +7,7 @@ using Shop.DataAccess;
 using Shop.DataAccess.Repositories;
 using Shop.DataAccess.Repositories.Interfaces;
 using Shop.Domain.Entities;
+using Shop.Domain.MapperResolvers;
 using Shop.Domain.Mappings;
 using Shop.Infrastructure.Services;
 using Swashbuckle.AspNetCore.Filters;
@@ -17,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 // Add services to the container.
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(EntityDtosProfile));
+builder.Services.AddTransient<OrderTotalResolver>();
 builder.Services.AddDbContext<ApplicationDbContext>(
 	options => options.UseSqlServer(builder.Configuration.GetSection("ConnectionStrings:DefaultConnection").Value));
 builder.Services.AddTransient<IItemService, ItemService>();
