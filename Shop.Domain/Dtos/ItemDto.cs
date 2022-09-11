@@ -1,4 +1,6 @@
-﻿namespace Shop.Domain.Dtos
+﻿using AutoMapper.Configuration.Annotations;
+
+namespace Shop.Domain.Dtos
 {
 	public class ItemDto
 	{ 

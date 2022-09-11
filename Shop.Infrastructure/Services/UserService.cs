@@ -27,7 +27,7 @@ namespace Shop.Infrastructure.Services
 			_userRepository = userRepository;
 			_configuration = configuration;
 			_httpContext = httpContext;
-			_cartRepository = _cartRepository;
+			_cartRepository = cartRepository;
 		}
 
 		public async Task AddUser(UserDto userDto)

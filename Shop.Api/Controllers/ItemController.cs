@@ -41,7 +41,7 @@ namespace Shop.Api.Controllers
 			return Ok(itemDto);
 		}
 
-		[HttpPost("update")]
+		[HttpPut("update")]
 		public async Task<ActionResult> UpdateItem([FromBody] ItemDto itemDto, Guid itemId)
 		{
 			if (itemDto == null)

@@ -15,7 +15,16 @@ namespace Shop.Domain.Mappings
 		{
 			CreateMap<User, UserDto>().ReverseMap();
 			CreateMap<Item, ItemDto>().ReverseMap();
-			CreateMap<Order, OrderDto>().ReverseMap();
+			CreateMap<Order, OrderDto>()
+				.ForMember(dest => dest.OrderItemDtos, opt => opt.MapFrom(src => src.OrderItems))
+				.ForMember(dest => dest.OrderItemDtos, opt => opt.SetMappingOrder(0))
+				.ForMember(dest => dest.TotalPrice, o => o.SetMappingOrder(1))
+				.ReverseMap();
+			CreateMap<OrderItem, OrderItemDto>()
+				.ForMember(dest => dest.ItemDto, opt => opt.MapFrom(src => src.Item))
+				.ForMember(dest => dest.ItemQuntity, opt => opt.MapFrom(src => src.Quantity))
+				.ReverseMap();
+			CreateMap<OrderItem, OrderItemAddingDto>().ReverseMap();
 		}
 	}
 }

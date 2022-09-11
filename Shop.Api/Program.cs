@@ -22,6 +22,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(
 builder.Services.AddTransient<IItemService, ItemService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
+builder.Services.AddTransient<IOrderItemService, OrderItemService>();
 builder.Services.AddTransient<IBaseRepository<User>, UserRepository>();
 builder.Services.AddTransient<IBaseRepository<Item>, ItemRepository>();
 builder.Services.AddTransient<IBaseRepository<Order>, OrderRepository>();

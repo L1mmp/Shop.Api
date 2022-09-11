@@ -10,6 +10,7 @@ namespace Shop.Application.Interfaces
 	public interface IOrderItemService
 	{
 		public Task<IEnumerable<OrderItemDto>> GetOrderItemsByOrderId(Guid orderId);
-
+		public Task AddOrderItemToOrder(OrderItemAddingDto dto);
+		public Task DeleteOrderItemFromOrder();
 	}
 }

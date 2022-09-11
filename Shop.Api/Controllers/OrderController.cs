@@ -24,9 +24,9 @@ namespace Shop.Api.Controllers
 		}
 
 		[HttpPost("addOrder"), Authorize]
-		public async Task<ActionResult> AddOrder(OrderDto orderDto)
+		public async Task<ActionResult> AddOrder()
 		{
-			await _orderService.AddOrder(orderDto);
+			await _orderService.AddOrderToCurrentUser();
 			return Ok();
 		}
 	}

@@ -1,12 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
-using Shop.DataAccess.Repositories.Interfaces;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Shop.DataAccess.Repositories
 {
@@ -95,12 +89,10 @@ namespace Shop.DataAccess.Repositories
 		{
 			IQueryable<TEntity> query = _dbSet.AsNoTracking();
 
-			var task = Task.Run(() =>
+			return await Task.Run(() =>
 			{
 				return includeProperties.Aggregate(query, (current, includeProperty) => current.Include(includeProperty));
-			});
-
-			return await task;
+			}); 
 		}
 	}
 }
