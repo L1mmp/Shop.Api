@@ -29,5 +29,11 @@ namespace Shop.Api.Controllers
 			await _orderService.AddOrderToCurrentUser();
 			return Ok();
 		}
+
+		[HttpGet("getOrdersAsyncNew"), Authorize]
+		public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrdersWithAllInfoForCurrentUser()
+		{
+			return Ok(await _orderService.GetOrdersWithAllInfoForCurrentUser());
+		}
 	}
 }

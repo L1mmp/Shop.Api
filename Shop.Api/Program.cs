@@ -27,7 +27,7 @@ builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IOrderItemService, OrderItemService>();
 builder.Services.AddTransient<IBaseRepository<User>, UserRepository>();
 builder.Services.AddTransient<IBaseRepository<Item>, ItemRepository>();
-builder.Services.AddTransient<IBaseRepository<Order>, OrderRepository>();
+builder.Services.AddTransient<IOrderRepository, OrderRepository>();
 builder.Services.AddTransient<IBaseRepository<OrderItem>, OrderItemRepository>();
 builder.Services.AddTransient<IBaseRepository<Cart>, CartRepository>();
 builder.Services.AddHttpContextAccessor();

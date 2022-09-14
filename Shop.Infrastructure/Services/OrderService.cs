@@ -16,11 +16,11 @@ namespace Shop.Infrastructure.Services
 {
 	public class OrderService : IOrderService
 	{
-		private readonly IBaseRepository<Order> _orderRepository;
+		private readonly IOrderRepository _orderRepository;
 		private readonly IMapper _mapper;
 		private readonly IHttpContextAccessor _httpContext;
 		private readonly IBaseRepository<Item> _itemRepository;
-		public OrderService(IBaseRepository<Order> orderRepository, IMapper mapper, IHttpContextAccessor httpContext, IBaseRepository<Item> itemRepository)
+		public OrderService(IOrderRepository orderRepository, IMapper mapper, IHttpContextAccessor httpContext, IBaseRepository<Item> itemRepository)
 		{
 			_orderRepository = orderRepository;
 			_mapper = mapper;
@@ -43,6 +43,14 @@ namespace Shop.Infrastructure.Services
 
 			var ordersDto = _mapper.Map<IEnumerable<OrderDto>>(orders);
 			return ordersDto;
+		}
+
+		public async Task<IEnumerable<OrderDto>> GetOrdersWithAllInfoForCurrentUser()
+		{
+			var currentCartId = new Guid(_httpContext.HttpContext.User.FindFirst("cartId").Value);
+
+			var orders = await _orderRepository.GetOrdersWithAllInfoForCurrentUser(currentCartId);
+			return _mapper.Map<IEnumerable<OrderDto>>(orders);
 		}
 
 		public async Task AddOrder(Guid cartId)

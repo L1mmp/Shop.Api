@@ -17,5 +17,6 @@ namespace Shop.Application.Interfaces
 		public Task<bool> CheckIsAnyUncompletedOrders();
 		public Task<Order> GetLatestUncompletedOrderOfCurrentUser();
 		public Task AddOrderToCurrentUser();
+		public Task<IEnumerable<OrderDto>> GetOrdersWithAllInfoForCurrentUser();
 	}
 }
