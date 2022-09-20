@@ -28,11 +28,6 @@ namespace Shop.Api.Controllers
 		[HttpPost("register")]
 		public async Task<ActionResult> Register(UserDto userDto)
 		{
-			if (userDto is null)
-			{
-				return BadRequest("User is null");
-			}
-			
 			var refreshToken = await _authService.Register(userDto);
 			SetRefreshToken(refreshToken);
 
