@@ -10,18 +10,20 @@ using Shop.Domain.ResponceModels;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq.Expressions;
 using System.Security.Claims;
+using Shop.Domain.Models;
+using Shop.Infrastructure.Providers;
 
 namespace Shop.Infrastructure.Services
 {
 	public class UserService : IUserService
 	{
 		private readonly IMapper _mapper;
-		private readonly IBaseRepository<User> _userRepository;
+		private readonly IUserRepository _userRepository;
 		private readonly IConfiguration _configuration;
 		private readonly IHttpContextAccessor _httpContext;
-		private readonly IBaseRepository<Cart> _cartRepository;
+		private readonly ICartRepository _cartRepository;
 
-		public UserService(IMapper mapper, IBaseRepository<User> userRepository, IConfiguration configuration, IHttpContextAccessor httpContext, IBaseRepository<Cart> cartRepository)
+		public UserService(IMapper mapper, IUserRepository userRepository, IConfiguration configuration, IHttpContextAccessor httpContext, ICartRepository cartRepository)
 		{
 			_mapper = mapper;
 			_userRepository = userRepository;
@@ -30,13 +32,28 @@ namespace Shop.Infrastructure.Services
 			_cartRepository = cartRepository;
 		}
 
-		public async Task AddUser(UserDto userDto)
+		public async Task AddUser(User user)
 		{
-			var user = _mapper.Map<User>(userDto);
+			await _userRepository.Add(user);
+		}
+
+		public async Task<RefreshToken> Register(UserDto dto)
+		{
+			var tokenHelper = new TokenProvider(_configuration);
+			var refreshToken = tokenHelper.CreateRefreshToken();
+			var user = _mapper.Map<User>(dto);
 
 			user.Password = HashPassword(user.Password);
+			user.RefreshToken = refreshToken.Token;
+			user.TokenCreated = refreshToken.Created;
+			user.TokenExpires = refreshToken.Expires;
 
-			await _userRepository.Add(user);
+			await AddUser(user);
+
+			var cartEntity = new Cart() { User = user };
+			await _cartRepository.Add(cartEntity);
+
+			return refreshToken;
 		}
 
 
@@ -75,7 +92,9 @@ namespace Shop.Infrastructure.Services
 
 		public async Task<LoginResponceModel> TryLogin(LoginDto loginDto)
 		{
-			var user = _userRepository.GetWithInclude(x => x.Login == loginDto.Login.ToString(), x => x.Cart).FirstOrDefault();
+			var user = (await _userRepository.GetWithIncludeAsync(x => x.Login == loginDto.Login, x => x.Cart)).FirstOrDefault();
+
+			var tokenProvider = new TokenProvider(_configuration);
 
 			var responce = new LoginResponceModel
 			{
@@ -88,16 +107,22 @@ namespace Shop.Infrastructure.Services
 				return responce;
 			}
 
-			var verified = VerifyPassword(loginDto.Password.ToString(), user);
+			var verified = VerifyPassword(loginDto.Password, user);
 
 			if (verified)
 			{
 				responce.IsSuccessful = true;
 				responce.Message = "Login successful";
-				responce.Token = CreateToken(user);
+				responce.Token = tokenProvider.CreateToken(user);
+				responce.RefreshToken = tokenProvider.CreateRefreshToken();
 			}
 
 			return responce;
+		}
+
+		public async Task<IEnumerable<User>> GetWithIncludeAsync(Func<User, bool> predicate, params Expression<Func<User, object>>[] includeProperties)
+		{
+			return await _userRepository.GetWithIncludeAsync(predicate, includeProperties);
 		}
 
 		private static bool VerifyPassword(string password, User? user)
@@ -109,30 +134,6 @@ namespace Shop.Infrastructure.Services
 		{
 			var pass = BCrypt.Net.BCrypt.HashPassword(password);
 			return pass;
-		}
-
-		private string CreateToken(User user)
-		{
-			var claims = new List<Claim>()
-			{
-				new Claim(ClaimTypes.Name, user.Login),
-				new Claim("Id", user.Id.ToString()),
-				new Claim("cartId",user.Cart.Id.ToString())
-			};
-
-			var key = new SymmetricSecurityKey(System.Text.Encoding.UTF8.GetBytes(
-				_configuration.GetSection("AppSettings:Token").Value));
-
-			var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha512Signature);
-
-			var token = new JwtSecurityToken(
-				claims: claims,
-				expires: DateTime.UtcNow.AddDays(1),
-				signingCredentials: creds);
-
-			var jwt = new JwtSecurityTokenHandler().WriteToken(token);
-
-			return jwt;
 		}
 	}
 }

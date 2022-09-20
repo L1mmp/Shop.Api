@@ -5,6 +5,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using AutoMapper.Configuration.Annotations;
 
 namespace Shop.Domain.Entities
 {
@@ -15,7 +16,10 @@ namespace Shop.Domain.Entities
 		[Required]
 		public int Age { get; set; }
 		public string? Login { get; set; }
-		[Required]
+		[Required] 
 		public string? Password { get; set; }
+		public string RefreshToken { get; set; } = string.Empty;
+		public DateTime TokenCreated { get; set; }
+		public DateTime TokenExpires { get; set; }
 	}
 }

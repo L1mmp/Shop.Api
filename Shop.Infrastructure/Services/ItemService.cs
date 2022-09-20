@@ -9,10 +9,10 @@ namespace Shop.Infrastructure.Services
 {
 	public class ItemService : IItemService
 	{
-		private readonly IBaseRepository<Item> _itemRepositroy;
+		private readonly IItemRepository _itemRepositroy;
 		private readonly IMapper _mapper;
 
-		public ItemService(IBaseRepository<Item> itemRepositroy, IMapper mapper)
+		public ItemService(IItemRepository itemRepositroy, IMapper mapper)
 		{
 			_itemRepositroy = itemRepositroy;
 			_mapper = mapper;

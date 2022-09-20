@@ -15,18 +15,16 @@ namespace Shop.Infrastructure.Services
 {
 	public class OrderItemService : IOrderItemService
 	{
-		IBaseRepository<OrderItem> _orderItemRepository;
-		IMapper _mapper;
-		IHttpContextAccessor _httpContext;
-		IOrderService _orderService;
-		IItemService _itemService;
-		public OrderItemService(IBaseRepository<OrderItem> orderItemRepository, IMapper mapper, IHttpContextAccessor httpContext, IOrderService orderService, IItemService itemService)
+		private readonly IOrderItemRepository _orderItemRepository;
+		private readonly IMapper _mapper;
+		private readonly IHttpContextAccessor _httpContext;
+		private readonly IOrderService _orderService;
+		public OrderItemService(IOrderItemRepository orderItemRepository, IMapper mapper, IHttpContextAccessor httpContext, IOrderService orderService)
 		{
 			_orderItemRepository = orderItemRepository;
 			_mapper = mapper;
 			_httpContext = httpContext;
 			_orderService = orderService;
-			_itemService = itemService;
 		}
 
 		public async Task AddOrderItemToOrder(OrderItemAddingDto dto)

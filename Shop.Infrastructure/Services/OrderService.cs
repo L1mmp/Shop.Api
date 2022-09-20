@@ -19,32 +19,13 @@ namespace Shop.Infrastructure.Services
 		private readonly IOrderRepository _orderRepository;
 		private readonly IMapper _mapper;
 		private readonly IHttpContextAccessor _httpContext;
-		private readonly IBaseRepository<Item> _itemRepository;
-		public OrderService(IOrderRepository orderRepository, IMapper mapper, IHttpContextAccessor httpContext, IBaseRepository<Item> itemRepository)
+		public OrderService(IOrderRepository orderRepository, IMapper mapper, IHttpContextAccessor httpContext)
 		{
 			_orderRepository = orderRepository;
 			_mapper = mapper;
 			_httpContext = httpContext;
-			_itemRepository = itemRepository;
 		}
-
-		public async Task<IEnumerable<OrderDto>> GetAllUserOrdersWithInfo()
-		{
-			var currentCartId = new Guid(_httpContext.HttpContext.User.FindFirst("cartId").Value);
-			var orders = await _orderRepository.GetWithIncludeAsync(x => x.CartId == currentCartId, o => o.OrderItems);
-
-			var itemsIds = orders.SelectMany(x => x.OrderItems.Select(x => x.ItemId).Distinct());
-
-			var itemsInfo = (await _itemRepository.GetByCondition((x) => itemsIds.Contains(x.Id)));
-
-			orders.ToList()
-			.ForEach(x => x.OrderItems
-			.ForEach(x => x.Item = itemsInfo.Where(t => t.Id == x.ItemId).FirstOrDefault()));
-
-			var ordersDto = _mapper.Map<IEnumerable<OrderDto>>(orders);
-			return ordersDto;
-		}
-
+		
 		public async Task<IEnumerable<OrderDto>> GetOrdersWithAllInfoForCurrentUser()
 		{
 			var currentCartId = new Guid(_httpContext.HttpContext.User.FindFirst("cartId").Value);
