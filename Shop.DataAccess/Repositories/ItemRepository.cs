@@ -3,7 +3,7 @@ using Shop.Domain.Entities;
 
 namespace Shop.DataAccess.Repositories
 {
-	public class ItemRepository : BaseRepository<Item>, IBaseRepository<Item>
+	public class ItemRepository : BaseRepository<Item>, IItemRepository
 	{
 		public ItemRepository(ApplicationDbContext dbContext) : base(dbContext)
 		{

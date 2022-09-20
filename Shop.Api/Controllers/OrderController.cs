@@ -17,12 +17,6 @@ namespace Shop.Api.Controllers
 			_orderService = orderService;
 		}
 
-		[HttpGet("getOrders"), Authorize]
-		public async Task<ActionResult<IEnumerable<OrderDto>>> GetAllUserOrdersWithInfo()
-		{
-			return Ok(await _orderService.GetAllUserOrdersWithInfo());
-		}
-
 		[HttpPost("addOrder"), Authorize]
 		public async Task<ActionResult> AddOrder()
 		{
@@ -30,7 +24,7 @@ namespace Shop.Api.Controllers
 			return Ok();
 		}
 
-		[HttpGet("getOrdersAsyncNew"), Authorize]
+		[HttpGet("getOrders"), Authorize]
 		public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrdersWithAllInfoForCurrentUser()
 		{
 			return Ok(await _orderService.GetOrdersWithAllInfoForCurrentUser());

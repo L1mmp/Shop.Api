@@ -11,7 +11,6 @@ namespace Shop.Application.Interfaces
 {
 	public interface IOrderService
 	{
-		public Task<IEnumerable<OrderDto>> GetAllUserOrdersWithInfo();
 		public Task AddOrder(Guid cartId);
 		public Task<IEnumerable<Order>> GetByCondition(Expression<Func<Order, bool>> predicate);
 		public Task<bool> CheckIsAnyUncompletedOrders();

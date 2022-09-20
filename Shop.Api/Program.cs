@@ -12,6 +12,7 @@ using Shop.Domain.Mappings;
 using Shop.Infrastructure.Services;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
+using Shop.Infrastructure.Providers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,15 +22,17 @@ builder.Services.AddAutoMapper(typeof(EntityDtosProfile));
 builder.Services.AddTransient<OrderTotalResolver>();
 builder.Services.AddDbContext<ApplicationDbContext>(
 	options => options.UseSqlServer(builder.Configuration.GetSection("ConnectionStrings:DefaultConnection").Value));
+builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddTransient<TokenProvider>();
 builder.Services.AddTransient<IItemService, ItemService>();
 builder.Services.AddTransient<IUserService, UserService>();
 builder.Services.AddTransient<IOrderService, OrderService>();
 builder.Services.AddTransient<IOrderItemService, OrderItemService>();
-builder.Services.AddTransient<IBaseRepository<User>, UserRepository>();
-builder.Services.AddTransient<IBaseRepository<Item>, ItemRepository>();
+builder.Services.AddTransient<IUserRepository, UserRepository>();
+builder.Services.AddTransient<IItemRepository, ItemRepository>();
 builder.Services.AddTransient<IOrderRepository, OrderRepository>();
-builder.Services.AddTransient<IBaseRepository<OrderItem>, OrderItemRepository>();
-builder.Services.AddTransient<IBaseRepository<Cart>, CartRepository>();
+builder.Services.AddTransient<IOrderItemRepository, OrderItemRepository>();
+builder.Services.AddTransient<ICartRepository, CartRepository>();
 builder.Services.AddHttpContextAccessor();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
