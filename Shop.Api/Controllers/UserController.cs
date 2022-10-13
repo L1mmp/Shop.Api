@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Shop.Application.Interfaces;
 using Shop.Domain.Dtos;
 using Shop.Domain.ResponceModels;
@@ -16,7 +17,11 @@ namespace Shop.Api.Controllers
 			_userService = userService;
 		}
 
-		[HttpGet("getAll")]
+		/// <summary>
+		/// Get all users in system.
+		/// </summary>
+		/// <returns> All users in system. </returns>
+		[HttpGet("getAll"), Authorize(Roles = "Admin")]
 		public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
 		{
 			try

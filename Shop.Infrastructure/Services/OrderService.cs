@@ -25,7 +25,7 @@ namespace Shop.Infrastructure.Services
 			_mapper = mapper;
 			_httpContext = httpContext;
 		}
-		
+
 		public async Task<IEnumerable<OrderDto>> GetOrdersWithAllInfoForCurrentUser()
 		{
 			var currentCartId = new Guid(_httpContext.HttpContext.User.FindFirst("cartId").Value);
@@ -41,7 +41,7 @@ namespace Shop.Infrastructure.Services
 				CartId = cartId,
 				Status = "Uncompleted"
 			};
-			await _orderRepository.Add(entity);
+			await _orderRepository.AddAsync(entity);
 		}
 
 		public async Task AddOrderToCurrentUser()
@@ -53,26 +53,26 @@ namespace Shop.Infrastructure.Services
 				Status = "Uncompleted",
 				OrderDate = DateTime.UtcNow,
 			};
-			await _orderRepository.Add(entity);
+			await _orderRepository.AddAsync(entity);
 		}
 
 		public async Task<bool> CheckIsAnyUncompletedOrders()
 		{
 			var currentCartId = new Guid(_httpContext.HttpContext.User.FindFirst("cartId").Value);
 
-			return (await _orderRepository.GetByCondition(x => (x.CartId == currentCartId) && (x.Status == "Uncompleted"))).Any();
+			return (await _orderRepository.GetByConditionAsync(x => (x.CartId == currentCartId) && (x.Status == "Uncompleted"))).Any();
 		}
 
 		public async Task<IEnumerable<Order>> GetByCondition(Expression<Func<Order, bool>> predicate)
 		{
-			return await _orderRepository.GetByCondition(predicate);
+			return await _orderRepository.GetByConditionAsync(predicate);
 		}
 
 		public async Task<Order> GetLatestUncompletedOrderOfCurrentUser()
 		{
 			var currentCartId = new Guid(_httpContext.HttpContext.User.FindFirst("cartId").Value);
 
-			return (await _orderRepository.GetByCondition(x => x.CartId == currentCartId && x.Status == "Uncompleted")).OrderBy(x => x.OrderDate).FirstOrDefault();
+			return (await _orderRepository.GetByConditionAsync(x => x.CartId == currentCartId && x.Status == "Uncompleted")).OrderBy(x => x.OrderDate).FirstOrDefault();
 		}
 	}
 }

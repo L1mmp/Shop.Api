@@ -13,10 +13,11 @@ using Shop.Infrastructure.Services;
 using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 using Shop.Infrastructure.Providers;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container.
+// AddAsync services to the container.
 builder.Services.AddControllers();
 builder.Services.AddAutoMapper(typeof(EntityDtosProfile));
 builder.Services.AddTransient<OrderTotalResolver>();
@@ -38,6 +39,12 @@ builder.Services.AddHttpContextAccessor();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(opt =>
 {
+	opt.SwaggerDoc("v1", new OpenApiInfo
+	{
+		Version = "v1",
+		Title = "Shop API",
+		Description = "An ASP.NET Core Web API for managing shop"
+	});
 	opt.AddSecurityDefinition("oauth2", new OpenApiSecurityScheme
 	{
 		Description = "Standard Authorization header using the Bearer scheme (\"bearer {token}\")",
@@ -47,6 +54,7 @@ builder.Services.AddSwaggerGen(opt =>
 	});
 	opt.OperationFilter<SecurityRequirementsOperationFilter>();
 });
+
 builder.Services.AddAuthentication(
 	JwtBearerDefaults.AuthenticationScheme)
 	.AddJwtBearer(opt =>

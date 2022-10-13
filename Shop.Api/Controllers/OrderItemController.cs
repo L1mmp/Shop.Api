@@ -17,6 +17,11 @@ namespace Shop.Api.Controllers
 			_orderItemService = orderItemService;
 		}
 
+		/// <summary>
+		/// Adds new item to order.
+		/// </summary>
+		/// <param name="dto"> orderDTO </param>
+		/// <returns> Ok if add was successful. </returns>
 		[HttpPost("addOrderItemToOrder"), Authorize]
 		public async Task<ActionResult> AddOrderItemToOrder(OrderItemAddingDto dto)
 		{

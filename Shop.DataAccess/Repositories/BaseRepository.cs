@@ -4,10 +4,19 @@ using System.Linq.Expressions;
 
 namespace Shop.DataAccess.Repositories
 {
+	/// <summary>
+	/// Abstract base repository.
+	/// </summary>
+	/// <typeparam name="TEntity"> Database entity. </typeparam>
 	public abstract class BaseRepository<TEntity> where TEntity : class
 	{
+		#region Readonly fields
+
 		protected readonly ApplicationDbContext _dbContext;
 		private readonly DbSet<TEntity> _dbSet;
+
+		#endregion
+
 
 		protected BaseRepository(ApplicationDbContext dbContext)
 		{
@@ -15,7 +24,7 @@ namespace Shop.DataAccess.Repositories
 			_dbSet = dbContext.Set<TEntity>();
 		}
 
-		public async Task<EntityEntry<TEntity>> Add(TEntity entity)
+		public async Task<EntityEntry<TEntity>> AddAsync(TEntity entity)
 		{
 			if (entity == null)
 			{
@@ -29,27 +38,27 @@ namespace Shop.DataAccess.Repositories
 			return addedEntity;
 		}
 
-		public async Task DeleteById(Guid id)
+		public async Task DeleteByIdAsync(Guid id)
 		{
-			_dbSet.Remove(await GetById(id));
+			_dbSet.Remove(await GetByIdAsync(id));
 		}
 
-		public async Task<IEnumerable<TEntity>> GetAll()
+		public async Task<IEnumerable<TEntity>> GetAllAsync()
 		{
 			return await _dbSet.AsNoTracking().ToListAsync();
 		}
 
-		public async Task<IEnumerable<TEntity>> GetByCondition(Expression<Func<TEntity, bool>> predicate)
+		public async Task<IEnumerable<TEntity>> GetByConditionAsync(Expression<Func<TEntity, bool>> predicate)
 		{
-			return await _dbSet.Where(predicate).AsNoTracking().ToListAsync();
+			return await _dbSet.AsNoTracking().Where(predicate).ToListAsync();
 		}
 
-		public async Task<TEntity> GetById(Guid id)
+		public async Task<TEntity> GetByIdAsync(Guid id)
 		{
 			return await _dbSet.FindAsync(id);
 		}
 
-		public async Task Update(TEntity entity)
+		public async Task UpdateAsync(TEntity entity)
 		{
 			_dbContext.Entry(entity).State = EntityState.Modified;
 			await _dbContext.SaveChangesAsync();

@@ -17,6 +17,10 @@ namespace Shop.Api.Controllers
 			_orderService = orderService;
 		}
 
+		/// <summary>
+		/// Creates new order.
+		/// </summary>
+		/// <returns> Ok if add was successful. </returns>
 		[HttpPost("addOrder"), Authorize]
 		public async Task<ActionResult> AddOrder()
 		{
@@ -24,6 +28,10 @@ namespace Shop.Api.Controllers
 			return Ok();
 		}
 
+		/// <summary>
+		/// Gets all user orders with items info.
+		/// </summary>
+		/// <returns> All user orders with items info. </returns>
 		[HttpGet("getOrders"), Authorize]
 		public async Task<ActionResult<IEnumerable<OrderDto>>> GetOrdersWithAllInfoForCurrentUser()
 		{

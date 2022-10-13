@@ -52,10 +52,10 @@ namespace Shop.Infrastructure.Services
 			user.TokenCreated = refreshToken.Created;
 			user.TokenExpires = refreshToken.Expires;
 
-			await _userRepository.Add(user);
+			await _userRepository.AddAsync(user);
 
 			var cartEntity = new Cart() { User = user };
-			await _cartRepository.Add(cartEntity);
+			await _cartRepository.AddAsync(cartEntity);
 
 			return refreshToken;
 		}
@@ -91,7 +91,7 @@ namespace Shop.Infrastructure.Services
 				user.TokenExpires = refresh.Expires;
 			}
 
-			await _userRepository.Update(user);
+			await _userRepository.UpdateAsync(user);
 
 			return responce;
 		}
@@ -99,7 +99,7 @@ namespace Shop.Infrastructure.Services
 		public async Task<RefreshToken> GetUserRefreshToken()
 		{
 			var login = _httpContext.HttpContext.User.FindFirst(ClaimTypes.Name).Value;
-			var user = (await _userRepository.GetByCondition(x => x.Login == login)).FirstOrDefault();
+			var user = (await _userRepository.GetByConditionAsync(x => x.Login == login)).FirstOrDefault();
 
 			return new RefreshToken()
 			{

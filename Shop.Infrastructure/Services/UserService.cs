@@ -34,7 +34,7 @@ namespace Shop.Infrastructure.Services
 
 		public async Task AddUser(User user)
 		{
-			await _userRepository.Add(user);
+			await _userRepository.AddAsync(user);
 		}
 
 		public async Task<RefreshToken> Register(UserDto dto)
@@ -51,7 +51,7 @@ namespace Shop.Infrastructure.Services
 			await AddUser(user);
 
 			var cartEntity = new Cart() { User = user };
-			await _cartRepository.Add(cartEntity);
+			await _cartRepository.AddAsync(cartEntity);
 
 			return refreshToken;
 		}
@@ -59,12 +59,12 @@ namespace Shop.Infrastructure.Services
 
 		public async Task DeleteUser(Guid id)
 		{
-			await _userRepository.DeleteById(id);
+			await _userRepository.DeleteByIdAsync(id);
 		}
 
 		public async Task<IEnumerable<UserDto>> GetAll()
 		{
-			var users = await _userRepository.GetAll();
+			var users = await _userRepository.GetAllAsync();
 			if (!users.Any())
 			{
 				throw new NullReferenceException("No any users in system");
@@ -72,21 +72,21 @@ namespace Shop.Infrastructure.Services
 			return _mapper.Map<IEnumerable<UserDto>>(users);
 		}
 
-		public async Task<IEnumerable<UserDto>> GetByCondtiton(Expression<Func<User, bool>> expression)
+		public async Task<IEnumerable<UserDto>> GetByCondition(Expression<Func<User, bool>> expression)
 		{
-			var users = await _userRepository.GetByCondition(expression);
+			var users = await _userRepository.GetByConditionAsync(expression);
 			return _mapper.Map<IEnumerable<UserDto>>(users);
 		}
 
 		public async Task UpdateById(Guid id, UserDto userDto)
 		{
 			var entity = _mapper.Map<User>(userDto);
-			await _userRepository.Update(entity);
+			await _userRepository.UpdateAsync(entity);
 		}
 
 		public async Task<UserDto> GetById(Guid id)
 		{
-			var entity = await _userRepository.GetById(id);
+			var entity = await _userRepository.GetByIdAsync(id);
 			return _mapper.Map<UserDto>(entity);
 		}
 

@@ -21,9 +21,9 @@ namespace Shop.Api.Controllers
 		}
 
 		/// <summary>
-		/// Registr new user
+		/// Register new user.
 		/// </summary>
-		/// <param name="userDto"> User data </param>
+		/// <param name="userDto"> User data. </param>
 		/// <returns> 200 if registration was successful. 400 if registration wasn't successful. </returns>
 		[HttpPost("register")]
 		public async Task<ActionResult> Register(UserDto userDto)
@@ -34,8 +34,12 @@ namespace Shop.Api.Controllers
 			return Ok("Registration successful!");
 		}
 
+		/// <summary>
+		/// Tries to login user.
+		/// </summary>
+		/// <param name="loginDto"> UserDTO. </param>
+		/// <returns> Login responce model. </returns>
 		[HttpPost("login")]
-		
 		public async Task<ActionResult<LoginResponceModel>> Login([FromBody] LoginDto loginDto)
 		{
 			var responce = await _authService.Login(loginDto);
@@ -44,6 +48,10 @@ namespace Shop.Api.Controllers
 			return Ok(responce);
 		}
 
+		/// <summary>
+		/// Generate and set Refresh token.
+		/// </summary>
+		/// <returns> Refresh token responce model. </returns>
 		[HttpPost("refresh-token"), Authorize]
 		public async Task<ActionResult<string>> RefreshToken()
 		{
@@ -54,6 +62,10 @@ namespace Shop.Api.Controllers
 			return Ok(responce);
 		}
 
+		/// <summary>
+		/// Set refresh token to cookie.
+		/// </summary>
+		/// <param name="token"> Token to set. </param>
 		private void SetRefreshToken(RefreshToken token)
 		{
 			var cookie = new CookieOptions()

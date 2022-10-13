@@ -21,17 +21,17 @@ namespace Shop.Infrastructure.Services
 		public async Task AddItem(ItemDto itemDto)
 		{
 			var entity = _mapper.Map<Item>(itemDto);
-			await _itemRepositroy.Add(entity);
+			await _itemRepositroy.AddAsync(entity);
 		}
 
 		public async Task DeleteItemById(Guid itemId)
 		{
-			await _itemRepositroy.DeleteById(itemId);
+			await _itemRepositroy.DeleteByIdAsync(itemId);
 		}
 
 		public async Task<IEnumerable<ItemDto>> GetByCondtiton(Expression<Func<Item, bool>> expression)
 		{
-			var items = await _itemRepositroy.GetByCondition(expression);
+			var items = await _itemRepositroy.GetByConditionAsync(expression);
 			return _mapper.Map<IEnumerable<ItemDto>>(items);
 		}
 
@@ -39,7 +39,7 @@ namespace Shop.Infrastructure.Services
 		{
 			var entity = _mapper.Map<Item>(itemDto);
 			entity.Id = itemId;
-			await _itemRepositroy.Update(entity);
+			await _itemRepositroy.UpdateAsync(entity);
 		}
 	}
 }

@@ -42,7 +42,7 @@ namespace Shop.Infrastructure.Services
 			var orderItem = _mapper.Map<OrderItem>(dto);
 			orderItem.OrderId = lastOrderId;
 
-			await _orderItemRepository.Add(orderItem);
+			await _orderItemRepository.AddAsync(orderItem);
 		}
 
 		public Task DeleteOrderItemFromOrder()

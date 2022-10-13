@@ -18,6 +18,11 @@ namespace Shop.Api.Controllers
 			_itemService = itemService;
 		}
 
+		/// <summary>
+		/// Get item info by Id.
+		/// </summary>
+		/// <param name="id"> Id. </param>
+		/// <returns> Item info. </returns>
 		[HttpGet("getById"), Authorize]
 		public async Task<ActionResult> GetItemById(Guid id)
 		{
@@ -30,7 +35,12 @@ namespace Shop.Api.Controllers
 
 		}
 
-		[HttpPost("add")]
+		/// <summary>
+		/// Adds item.
+		/// </summary>
+		/// <param name="itemDto"> itemDto. </param>
+		/// <returns> Ok if add was successful. </returns>
+		[HttpPost("add"), Authorize(Roles = "Admin")]
 		public async Task<ActionResult> AddItem([FromBody]ItemDto itemDto)
 		{
 			if (itemDto == null)
@@ -41,6 +51,12 @@ namespace Shop.Api.Controllers
 			return Ok(itemDto);
 		}
 
+		/// <summary>
+		/// Updates item by Id.
+		/// </summary>
+		/// <param name="itemDto"> itemDto. </param>
+		/// <param name="itemId"> Item Id. </param>
+		/// <returns> Ok if update was successful </returns>
 		[HttpPut("update")]
 		public async Task<ActionResult> UpdateItem([FromBody] ItemDto itemDto, Guid itemId)
 		{
